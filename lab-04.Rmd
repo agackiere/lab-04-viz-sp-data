@@ -1,7 +1,7 @@
 ---
 title: "Lab 04 - La Quinta is Spanish for next to Denny's, Pt. 1"
 author: "Anaelle Gackiere"
-date: "02-06-2026"
+date: Sys.Date()
 output: github_document
 ---
 
@@ -12,6 +12,8 @@ output: github_document
 # devtools::install_github("rstudio-education/dsbox") did this for myself
 library(tidyverse) 
 library(dsbox) 
+data ("dennys")
+data ("laquinta")
 ```
 
 ```{r load-data, message = FALSE}
@@ -20,34 +22,132 @@ states <- read_csv("data/states.csv")
 
 ### Exercise 1
 
-Remove this text, and add your answer for Exercise 1 here.
-Add code chunks as needed.
-Don't forget to label your code chunk.
-Do not use spaces in code chunk labels.
+There are `r nrow(dennys)` rows and `r ncol(dennys)` columns for the Dennys dataset.Each row represents one Dennys location and the variables include city, address, state, zip, longitude, and latitude. 
+
+```{r dennys-description}
+dim(dennys)
+
+head(dennys)
+```
+
 
 ### Exercise 2
 
-Remove this text, and add your answer for Exercise 2 here.
-Add code chunks as needed.
-Don't forget to label your code chunk.
-Do not use spaces in code chunk labels.
+```{r laquinta-description}
+dim(laquinta) # just checking
+
+head(laquinta)
+```
+
+There are `r nrow(laquinta)` rows and `r ncol(laquinta)` columns for the La Quinta dataset.
+Each row represents one La Quinta location and the variables include city, address, state, zip, longitude, and latitude. 
 
 ### Exercise 3
+On the Dennys website, I only see US locations. On the La Quinta website, I saw that there are locations in Canada, Mexico, China, New Zealand, Georgia, Turkey, United Arab Emirates, Columbia, and Ecuador.
 
-...
 
 ### Exercise 4
+One way to determine whether or not there are establishments outside the United States would be by filtering the locations.
 
-...
+### Exercise 5 and 6
+```{r locations-NonUS-DN}
 
-### Exercise 5
+# For Dennys
+dennys %>%
+  filter(!(state %in% states$abbreviation))
 
+dennys %>%
+  mutate(country = "United States")
+
+```
+
+
+### Exercise 7 and 8
+```{r locations-NonUS-LQ}
+
+# For La Quinta
+laquinta %>%
+  mutate(country = case_when(
+    state %in% state.abb ~ "United States",
+    state %in% c("ON", "BC") ~ "Canada",
+    state == "ANT" ~ "Colombia",
+    ... # fill in the rest
+  ))
+
+laquinta <- laquinta %>%
+  filter(country == "United States")
+
+
+```
+
+### Exercise 9
+
+Which states have the most and fewest Denny’s locations? What about La Quinta? Is this surprising? Why or why not?
+
+```{r}
+# states w most and least dennys
+
+
+
+# states w most and least laquintas
+
+
+
+# Denny’s locations per thousand square miles.
+dn %>%
+  count(state) %>%
+  inner_join(states, by = c("state" = "abbreviation"))
+```
 ...
 
 ### Exercise 6
 
+Which states have the most Denny’s locations per thousand square miles? What about La Quinta?
+
+```{r}
+
+dn <- dn %>%
+  mutate(establishment = "Denny's")
+lq <- lq %>%
+  mutate(establishment = "La Quinta")
+
+```
+
+
 ...
 
  
-Add exercise headings as needed.
+### Exercise 7
+
+...
+
+### Exercise 8
+
+...
+
+### Exercise 9
+
+...
+
+### Exercise 10
+
+...
+
+### Exercise 11
+
+...
+
+### Exercise 12
+
+...
+
+### Exercise 13
+
+...
+
+
+
+
+
+
 
