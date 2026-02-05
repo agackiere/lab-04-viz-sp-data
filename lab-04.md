@@ -288,7 +288,7 @@ ggplot(dn_lq, mapping = aes(
   y = latitude,
   color = establishment
 )) +
-  geom_point()
+  geom_point(alpha = 0.4)
 ```
 
 ![](lab-04_files/figure-gfm/locations-miles-1.png)<!-- --> …
@@ -304,7 +304,8 @@ ggplot(
     color = establishment
   )
 ) +
-  geom_point(alpha = 0.5)
+  geom_point(alpha = 0.6) +
+  labs(title = "Dennys and La Quinta locations in North Carolina") 
 ```
 
 ![](lab-04_files/figure-gfm/NC-1.png)<!-- --> …
@@ -320,7 +321,8 @@ ggplot(
     color = establishment
   )
 ) +
-  geom_point(alpha = 0.5)
+  geom_point(alpha = 0.3) +
+  labs(title = "Dennys and La Quinta locations in Texas") 
 ```
 
 ![](lab-04_files/figure-gfm/Texas-1.png)<!-- -->

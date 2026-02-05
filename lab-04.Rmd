@@ -156,7 +156,7 @@ ggplot(dn_lq, mapping = aes(
   y = latitude,
   color = establishment
 )) +
-  geom_point()
+  geom_point(alpha = 0.4)
 
 ```
 ...
@@ -173,7 +173,8 @@ ggplot(
     color = establishment
   )
 ) +
-  geom_point(alpha = 0.5)
+  geom_point(alpha = 0.6) +
+  labs(title = "Dennys and La Quinta locations in North Carolina") 
 
 
 ```
@@ -191,7 +192,8 @@ ggplot(
     color = establishment
   )
 ) +
-  geom_point(alpha = 0.5)
+  geom_point(alpha = 0.3) +
+  labs(title = "Dennys and La Quinta locations in Texas") 
 
 
 
