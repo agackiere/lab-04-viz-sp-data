@@ -47,17 +47,26 @@ On the Dennys website, I only see US locations. On the La Quinta website, I saw 
 
 
 ### Exercise 4
-One way to determine whether or not there are establishments outside the United States would be by filtering the locations.
+One way to determine whether or not there are establishments outside the United States would be by filtering the locations. You can check the state column and make sure the entries fit the abbreviations for the US states. I guess you could also plot or check the range of the longitudes and latitudes, but that seems more time consuming. Another way is by checking the zipcode; if they're a different format, then that suggests the location may not be US-based.
 
 ### Exercise 5 and 6
 ```{r locations-NonUS-DN}
 
-# For Dennys
+# filter states not in state abbreviation for Dennys
 dennys %>%
-  filter(!(state %in% states$abbreviation))
+  filter(!(state %in% states$abbreviation)) %>%
+  nrow()
+    # added nrow() for peace of mind and makes sure it worked!
 
+# add country variable
 dennys %>%
   mutate(country = "United States")
+
+dennys <- dennys %>%
+  mutate(country = "United States")
+
+unique(dennys$country)
+  # just verifying
 
 ```
 
@@ -65,14 +74,24 @@ dennys %>%
 ### Exercise 7 and 8
 ```{r locations-NonUS-LQ}
 
-# For La Quinta
+# For La Quinta; non-US Codes 
 laquinta %>%
+  filter(!(state %in% state.abb)) %>%
+  distinct(state)
+
+
+laquinta <- laquinta %>%
   mutate(country = case_when(
     state %in% state.abb ~ "United States",
     state %in% c("ON", "BC") ~ "Canada",
+    state %in% c("AG", "QR", "CH", "NL", "PU", "SL") ~ "Mexico",
     state == "ANT" ~ "Colombia",
-    ... # fill in the rest
+    state == "VE" ~ "Venezuela",
+    state == "FM" ~ "China",
+    TRUE ~ NA_character_
   ))
+
+table(laquinta$country)
 
 laquinta <- laquinta %>%
   filter(country == "United States")
@@ -84,64 +103,100 @@ laquinta <- laquinta %>%
 
 Which states have the most and fewest Denny’s locations? What about La Quinta? Is this surprising? Why or why not?
 
-```{r}
-# states w most and least dennys
+California has the most Dennys, and Delaware only has one. Texas has the most La Quintas, while Maine only has one. This does not necessarily surprise me, given that DE and ME are very small states, while TX and CA are the most populous states in the US. 
 
+```{r amounts-per-states}
+# states with most and least dennys
 
+dennys %>%
+  count(state) %>%
+  slice_max(n, n = 1)
 
-# states w most and least laquintas
+dennys %>%
+  count(state) %>%
+  slice_min(n, n = 1)
 
+# states with most and least laquintas
+
+laquinta %>%
+  count(state) %>%
+  slice_max(n, n = 1)
+
+laquinta %>%
+  count(state) %>%
+  slice_min(n, n = 1)
 
 
 # Denny’s locations per thousand square miles.
-dn %>%
+dennys %>%
   count(state) %>%
   inner_join(states, by = c("state" = "abbreviation"))
 ```
 ...
 
-### Exercise 6
+### Exercise 10
 
 Which states have the most Denny’s locations per thousand square miles? What about La Quinta?
 
-```{r}
-
-dn <- dn %>%
+```{r locations-miles}
+# identifier var
+dennys <- dennys %>%
   mutate(establishment = "Denny's")
-lq <- lq %>%
+
+
+laquinta <- laquinta %>%
   mutate(establishment = "La Quinta")
 
+# join datasets
+dn_lq <- bind_rows(dennys, laquinta)
+
+# plot
+ggplot(dn_lq, mapping = aes(
+  x = longitude,
+  y = latitude,
+  color = establishment
+)) +
+  geom_point()
+
 ```
-
-
-...
-
- 
-### Exercise 7
-
-...
-
-### Exercise 8
-
-...
-
-### Exercise 9
-
-...
-
-### Exercise 10
-
 ...
 
 ### Exercise 11
 
+```{r NC}
+
+ggplot(
+  dn_lq %>% filter(state == "NC"),
+  aes(
+    x = longitude,
+    y = latitude,
+    color = establishment
+  )
+) +
+  geom_point(alpha = 0.5)
+
+
+```
 ...
 
 ### Exercise 12
 
-...
+```{r Texas}
 
-### Exercise 13
+ggplot(
+  dn_lq %>% filter(state == "TX"),
+  aes(
+    x = longitude,
+    y = latitude,
+    color = establishment
+  )
+) +
+  geom_point(alpha = 0.5)
+
+
+
+```
+
 
 ...
 
